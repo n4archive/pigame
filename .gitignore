@@ -102,3 +102,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# pydoc generation requirements
+pitft_touchscreen.py
