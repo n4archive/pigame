@@ -11,10 +11,10 @@ class PiTft:
         self.__b2 = False
         self.__b3 = False
         self.__b4 = False
-        self.__pin1 = 23
+        self.__pin1 = 17
         self.__pin2 = 22
-        self.__pin3 = 27
-        self.__pin4 = 18
+        self.__pin3 = 23
+        self.__pin4 = 27
         GPIO.setmode(GPIO.BCM)
         if buttons[0]:
             GPIO.setup(self.__pin1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -23,16 +23,16 @@ class PiTft:
             GPIO.setup(self.__pin2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             self.__b2 = True
         if buttons[2]:
-            if not v2:
-                self.__pin3 = 21
-
             GPIO.setup(self.__pin3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             self.__b3 = True
         if buttons[3]:
+            if not v2:
+                self.__pin4 = 21
             GPIO.setup(self.__pin4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             self.__b4 = True
         self.pitft.start()
     def update(self):
+        """Add Touchscreen Events to PyGame event queue."""
         while not self.pitft.queue_empty():
             for r in self.pitft.get_event():
                 e={"y":(r["x"] if r["x"] else pygame.mouse.get_pos()[0]),"x":(r["y"] if r["y"] else pygame.mouse.get_pos()[1])}
@@ -65,34 +65,44 @@ class PiTft:
                 pe=pygame.event.Event(t,d)
                 pygame.event.post(pe)
     def __del__(self):
+        """Cleaning up Touchscreen events and Threads when the Object destroyed."""
         self.pitft.stop()
     def Button1Interrupt(self,callback=None,bouncetime=200):
+        """Calls callback if Button1 pressed."""
         if self.__b1: 
             GPIO.add_event_detect(self.__pin1,GPIO.FALLING,callback=callback,bouncetime=bouncetime)
     def Button2Interrupt(self,callback=None,bouncetime=200):
+        """Calls callback if Button2 pressed."""
         if self.__b2: 
             GPIO.add_event_detect(self.__pin2,GPIO.FALLING,callback=callback,bouncetime=bouncetime)
     def Button3Interrupt(self,callback=None,bouncetime=200):
+        """Calls callback if Button3 pressed."""
         if self.__b3: 
             GPIO.add_event_detect(self.__pin3,GPIO.FALLING,callback=callback,bouncetime=bouncetime)
     def Button4Interrupt(self,callback=None,bouncetime=200):
+        """Calls callback if Button4 pressed."""
         if self.__b4: 
             GPIO.add_event_detect(self.__pin4,GPIO.FALLING,callback=callback,bouncetime=bouncetime)
     def Cleanup(self):
+        """Cleanup GPIO."""
         GPIO.cleanup()
     @property
     def Button1(self):
+        """Equals True if Button 1 is pressed."""
         if self.__b1:
             return not GPIO.input(self.__pin1)
     @property
     def Button2(self):
+        """Equals True if Button 2 is pressed."""
         if self.__b2:
             return not GPIO.input(self.__pin2)
     @property
     def Button3(self):
+        """Equals True if Button 3 is pressed."""
         if self.__b3:
             return not GPIO.input(self.__pin3)
     @property
     def Button4(self):
+        """Equals True if Button 4 is pressed."""
         if self.__b4:
             return not GPIO.input(self.__pin4)
