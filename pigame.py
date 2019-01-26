@@ -1,11 +1,45 @@
 import pygame,pitft_touchscreen
+import RPi.GPIO as GPIO
 from pygame.locals import *
 class PiTft:
-    def __init__(self,rotation:int=90):
+    def __init__(self,rotation:int=90,v2:bool=True,buttons=[True,True,True,True]):
         self.pitft=pitft_touchscreen.pitft_touchscreen()
         self.pitft.pigameevs=[]
         self.pitft.pigameapi=2
         self.pitft.pigamerotr=rotation
+        self.__b1 = False
+        self.__b2 = False
+        self.__b3 = False
+        self.__b4 = False
+        self.__pin1 = 23
+        self.__pin2 = 22
+        self.__pin3 = 27
+        self.__pin4 = 18
+
+        # set GPIO mode
+        GPIO.setmode(GPIO.BCM)
+
+
+        # Initialise buttons
+        if buttons[0]:
+            GPIO.setup(self.__pin1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            self.__b1 = True
+
+        if buttons[1]:
+            GPIO.setup(self.__pin2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            self.__b2 = True
+
+        if buttons[2]:
+            if not v2:
+                self.__pin3 = 21
+
+            GPIO.setup(self.__pin3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            self.__b3 = True
+
+        if buttons[3]:
+            GPIO.setup(self.__pin4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            self.__b4 = True
+
         self.pitft.start()
     def update():
         while not self.pitft.queue_empty():
@@ -41,4 +75,67 @@ class PiTft:
                 pygame.event.post(pe)
      def __del__():
         self.pitft.stop()
-     
+
+
+    # Add interrupt handling...
+    def Button1Interrupt(self,callback=None,bouncetime=200):
+        if self.__b1: 
+            GPIO.add_event_detect(self.__pin1, 
+                                  GPIO.FALLING, 
+                                  callback=callback, 
+                                  bouncetime=bouncetime)
+
+    def Button2Interrupt(self,callback=None,bouncetime=200):
+        if self.__b2: 
+            GPIO.add_event_detect(self.__pin2, 
+                                  GPIO.FALLING, 
+                                  callback=callback, 
+                                  bouncetime=bouncetime)
+
+    def Button3Interrupt(self,callback=None,bouncetime=200):
+        if self.__b3: 
+            GPIO.add_event_detect(self.__pin3, 
+                                  GPIO.FALLING, 
+                                  callback=callback, 
+                                  bouncetime=bouncetime)
+
+    def Button4Interrupt(self,callback=None,bouncetime=200):
+        if self.__b4: 
+            GPIO.add_event_detect(self.__pin4, 
+                                  GPIO.FALLING, 
+                                  callback=callback, 
+                                  bouncetime=bouncetime)
+
+    # Include the GPIO cleanup method
+    def Cleanup(self):
+        GPIO.cleanup()
+
+
+    # Some properties to retrieve value state of pin and return more logical
+    # True when pressed.
+    @property
+    def Button1(self):
+        '''Returns value of Button 1. Equals True when pressed.'''
+        if self.__b1:
+            return not GPIO.input(self.__pin1)
+
+    @property
+    def Button2(self):
+        '''Returns value of Button 2. Equals True when pressed.'''
+        if self.__b2:
+            return not GPIO.input(self.__pin2)
+
+    @property
+    def Button3(self):
+        '''Returns value of Button 3. Equals True when pressed.'''
+        if self.__b3:
+            return not GPIO.input(self.__pin3)
+
+    @property
+    def Button4(self):
+        '''Returns value of Button 4. Equals True when pressed.'''
+        if self.__b4:
+            return not GPIO.input(self.__pin4)                      
+
+
+
