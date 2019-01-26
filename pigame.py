@@ -32,7 +32,7 @@ class PiTft:
             GPIO.setup(self.__pin4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             self.__b4 = True
         self.pitft.start()
-    def update():
+    def update(self):
         while not self.pitft.queue_empty():
             for r in self.pitft.get_event():
                 e={"y":(r["x"] if r["x"] else pygame.mouse.get_pos()[0]),"x":(r["y"] if r["y"] else pygame.mouse.get_pos()[1])}
@@ -51,7 +51,7 @@ class PiTft:
                     pygame.mouse.set_pos(e["x"],e["y"])
                 elif t==MOUSEBUTTONUP:
                     l=[]
-                    for x in pitft.pigameevs:
+                    for x in self.pitft.pigameevs:
                         if x!=r["id"]:
                             l.append(x)
                     self.pitft.pigameevs=l
@@ -64,7 +64,7 @@ class PiTft:
                     pygame.mouse.set_pos(e["x"],e["y"])
                 pe=pygame.event.Event(t,d)
                 pygame.event.post(pe)
-     def __del__():
+    def __del__(self):
         self.pitft.stop()
     def Button1Interrupt(self,callback=None,bouncetime=200):
         if self.__b1: 
