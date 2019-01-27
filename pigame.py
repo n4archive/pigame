@@ -59,7 +59,7 @@ class PiTft:
                     d["pos"]=(e["x"],e["y"])
                 else:
                     d["buttons"]=(True,False,False)
-                    d["rel"]=(0,0)
+                    d["rel"]=(e["x"]-(pygame.mouse.get_pos()[0]),e["y"]-(pygame.mouse.get_pos()[1]))
                     d["pos"]=(e["x"],e["y"])
                     pygame.mouse.set_pos(e["x"],e["y"])
                 pe=pygame.event.Event(t,d)
