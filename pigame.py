@@ -21,7 +21,7 @@ def run():
             else:
                 raise(Exception("PiTft rotation is unsupported"))
             d={}
-            t=MOUSEBUTTONUP if r["touch"]==0 else (MOUSEMOTION if r["id"] in pitft.pigameevs else MOUSEBUTTONDOWN
+            t=MOUSEBUTTONUP if r["touch"]==0 else (MOUSEMOTION if r["id"] in pitft.pigameevs else MOUSEBUTTONDOWN)
             if t==MOUSEBUTTONDOWN:
                 d["button"]=1
                 d["pos"]=(e["x"],e["y"])
