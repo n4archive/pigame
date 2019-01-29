@@ -16,8 +16,10 @@ def run():
             pitft.pl={"x":e["x"],"y":e["y"]}
             if pitft.pigamerotr==90:
                 e={"x":e["x"],"y":240-e["y"]}
+                rel=(rel[0],rel[1]*-1)
             elif pitft.pigamerotr==270:
                 e={"x":320-e["x"],"y":e["y"]}
+                rel=(rel[0]*-1,rel[1])
             else:
                 raise(Exception("PiTft rotation is unsupported"))
             d={}
