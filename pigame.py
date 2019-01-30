@@ -1,7 +1,7 @@
 import pygame,pitft_touchscreen
 from pygame.locals import *
 pitft=pitft_touchscreen.pitft_touchscreen()
-pitft.pigameevs=[]
+pitft.button_down=False
 pitft.pl={'x':0,'y':0}
 def init(rotation:int=90):
     pitft.pigamerotr=rotation
@@ -16,23 +16,21 @@ def run():
             pitft.pl={"x":e["x"],"y":e["y"]}
             if pitft.pigamerotr==90:
                 e={"x":e["x"],"y":240-e["y"]}
+                rel=(rel[0],rel[1]*-1)
             elif pitft.pigamerotr==270:
                 e={"x":320-e["x"],"y":e["y"]}
+                rel=(rel[0]*-1,rel[1])
             else:
                 raise(Exception("PiTft rotation is unsupported"))
             d={}
-            t=MOUSEBUTTONUP if r["touch"]==0 else (MOUSEMOTION if r["id"] in pitft.pigameevs else MOUSEBUTTONDOWN)
+            t=MOUSEBUTTONUP if r["touch"]==0 else (MOUSEMOTION if pitft.button_down else MOUSEBUTTONDOWN)
             if t==MOUSEBUTTONDOWN:
+                pitft.button_down=True
                 d["button"]=1
                 d["pos"]=(e["x"],e["y"])
-                pitft.pigameevs.append(r["id"])
                 pygame.mouse.set_pos(e["x"],e["y"])
             elif t==MOUSEBUTTONUP:
-                l=[]
-                for x in pitft.pigameevs:
-                    if x!=r["id"]:
-                        l.append(x)
-                pitft.pigameevs=l
+                pitft.button_down=False
                 d["button"]=1
                 d["pos"]=(e["x"],e["y"])
             else:
