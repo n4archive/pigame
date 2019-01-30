@@ -7,6 +7,7 @@ class PiTft:
         self.pitft.pigameevs=[]
         self.pitft.pigameapi=2
         self.pitft.pigamerotr=rotation
+        self.cachedpos = [0,0]
         self.__b1 = False
         self.__b2 = False
         self.__b3 = False
@@ -35,7 +36,9 @@ class PiTft:
         """Add Touchscreen Events to PyGame event queue."""
         while not self.pitft.queue_empty():
             for r in self.pitft.get_event():
-                e={"y":(r["x"] if r["x"] else pygame.mouse.get_pos()[0]),"x":(r["y"] if r["y"] else pygame.mouse.get_pos()[1])}
+                e={"y":(r["x"] if r["x"] else self.cachedpos[0]),"x":(r["y"] if r["y"] else self.cachedpos[1])}
+                rel=(e["x"] - self.cachedpos[0],e["y"] - self.cachedpos[1])
+                self.cachedpos=(e["x"],e["y"])
                 if self.pitft.pigamerotr==90:
                     e={"x":e["x"],"y":240-e["y"]}
                 elif self.pitft.pigamerotr==270:
@@ -59,7 +62,7 @@ class PiTft:
                     d["pos"]=(e["x"],e["y"])
                 else:
                     d["buttons"]=(True,False,False)
-                    d["rel"]=(e["x"]-(pygame.mouse.get_pos()[0]),e["y"]-(pygame.mouse.get_pos()[1]))
+                    d["rel"]=rel
                     d["pos"]=(e["x"],e["y"])
                     pygame.mouse.set_pos(e["x"],e["y"])
                 pe=pygame.event.Event(t,d)
