@@ -4,7 +4,7 @@ from pygame.locals import *
 class PiTft:
     def __init__(self,rotation:int=90,v2:bool=True,buttons=[True,True,True,True]):
         self.pitft=pitft_touchscreen.pitft_touchscreen()
-        self.pitft.pigameevs=[]
+        self.pitft.button_down=False
         self.pitft.pigameapi=2
         self.pitft.pigamerotr=rotation
         self.cachedpos = [0,0]
@@ -41,23 +41,25 @@ class PiTft:
                 self.cachedpos=(e["x"],e["y"])
                 if self.pitft.pigamerotr==90:
                     e={"x":e["x"],"y":240-e["y"]}
+                    rel=(rel[0],rel[1]*-1)
                 elif self.pitft.pigamerotr==270:
                     e={"x":320-e["x"],"y":e["y"]}
+                    rel=(rel[0]*-1,rel[1])
                 else:
                     raise(Exception("PiTft rotation is unsupported"))
                 d={}
-                t=MOUSEBUTTONUP if r["touch"]==0 else (MOUSEMOTION if r["id"] in self.pitft.pigameevs else MOUSEBUTTONDOWN)
+                t=MOUSEBUTTONUP if r["touch"]==0 else (MOUSEMOTION if self.pitft.button_down else MOUSEBUTTONDOWN)
                 if t==MOUSEBUTTONDOWN:
                     d["button"]=1
                     d["pos"]=(e["x"],e["y"])
-                    self.pitft.pigameevs.append(r["id"])
+                    self.pitft.button_down = True
                     pygame.mouse.set_pos(e["x"],e["y"])
                 elif t==MOUSEBUTTONUP:
-                    l=[]
-                    for x in self.pitft.pigameevs:
-                        if x!=r["id"]:
-                            l.append(x)
-                    self.pitft.pigameevs=l
+                    # Webeditor tm
+                    # cant remove lines
+                    # wonderful
+                    # arghh i want the cli
+                    self.pitft.button_down = False
                     d["button"]=1
                     d["pos"]=(e["x"],e["y"])
                 else:
