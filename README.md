@@ -12,9 +12,10 @@
 
 
 
-# morefnc
-Here is the new API.
-Merged in the future.
+# pigame
+A touchscreen driver for the 2.8" capacitive.
+## Docs
+https://pigamedrv.github.io
 
 
 
