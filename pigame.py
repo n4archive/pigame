@@ -1,8 +1,15 @@
 import pygame,pitft_touchscreen
-import RPi.GPIO as GPIO
+support_gpio = True
+try:
+    import RPi.GPIO as GPIO
+except ImportError:
+    support_gpio = False
 from pygame.locals import *
 class PiTft:
-    def __init__(self,rotation:int=90,v2:bool=True,buttons=[True,True,True,True]):
+    def __init__(self,rotation:int=90,v2:bool=True,allow_gpio:bool=True,buttons=[True,True,True,True]):
+        self.use_gpio = support_gpio and allow_gpio
+        if not self.use_gpio:
+            buttons=[False,False,False,False]
         self.pitft=pitft_touchscreen.pitft_touchscreen()
         self.pitft.button_down=False
         self.pitft.pigameapi=2
@@ -16,7 +23,8 @@ class PiTft:
         self.__pin2 = 22
         self.__pin3 = 23
         self.__pin4 = 27
-        GPIO.setmode(GPIO.BCM)
+        if self.use_gpio:
+            GPIO.setmode(GPIO.BCM)
         if buttons[0]:
             GPIO.setup(self.__pin1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             self.__b1 = True
