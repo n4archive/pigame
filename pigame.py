@@ -6,7 +6,7 @@ except ImportError:
     support_gpio = False
 from pygame.locals import *
 class PiTft:
-    def __init__(self,rotation:int=90,v2:bool=True,allow_gpio:bool=True,buttons=[True,True,True,True]):
+    def __init__(self,rotation:int=90,v2:bool=True,allow_gpio:bool=True,swapx:bool=False,swapy:bool=False,buttons=[True,True,True,True]):
         self.use_gpio = support_gpio and allow_gpio
         if not self.use_gpio:
             buttons=[False,False,False,False]
@@ -14,6 +14,8 @@ class PiTft:
         self.pitft.button_down=False
         self.pitft.pigameapi=2
         self.pitft.pigamerotr=rotation
+        self.swapx = swapx
+        self.swapy = swapy
         self.cachedpos = [0,0]
         self.__b1 = False
         self.__b2 = False
@@ -66,7 +68,7 @@ class PiTft:
 # grr
 # moof
 # why
-                    e={"x":e["xdsgdjdy"]*-1,"y":e["y"]}
+                    e={"y":e["y"]*-1,"x":e["x"]}
                 if t==MOUSEBUTTONDOWN:
                     d["button"]=1
                     d["pos"]=(e["x"],e["y"])
