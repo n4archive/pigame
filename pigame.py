@@ -57,6 +57,16 @@ class PiTft:
                     raise(Exception("PiTft rotation is unsupported"))
                 d={}
                 t=MOUSEBUTTONUP if r["touch"]==0 else (MOUSEMOTION if self.pitft.button_down else MOUSEBUTTONDOWN)
+                if self.swapx:
+                    e={"x":e["x"]*-1,"y":e["y"]}
+                if self.swapy:
+                    if self.swapx:
+# Webeditor
+# I hate it
+# grr
+# moof
+# why
+                    e={"x":e["xdsgdjdy"]*-1,"y":e["y"]}
                 if t==MOUSEBUTTONDOWN:
                     d["button"]=1
                     d["pos"]=(e["x"],e["y"])
