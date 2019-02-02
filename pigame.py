@@ -62,7 +62,7 @@ class PiTft:
                 if self.swapx:
                     e={"x":e["x"]*-1,"y":e["y"]}
                 if self.swapy:
-                    if self.swapx:
+                    # nocomment
 # Webeditor
 # I hate it
 # grr
