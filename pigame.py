@@ -6,7 +6,7 @@ except ImportError:
     support_gpio = False
 from pygame.locals import *
 class PiTft:
-    def __init__(self,rotation:int=90,v2:bool=True,allow_gpio:bool=True,swapx:bool=False,swapy:bool=False,buttons=[True,True,True,True]):
+    def __init__(self,rotation:int=90,v2:bool=True,allow_gpio:bool=True,invertx:bool=False,inverty:bool=False,swapxy:bool=False,buttons=[True,True,True,True]):
         self.use_gpio = support_gpio and allow_gpio
         if not self.use_gpio:
             buttons=[False,False,False,False]
@@ -14,8 +14,9 @@ class PiTft:
         self.pitft.button_down=False
         self.pitft.pigameapi=2
         self.pitft.pigamerotr=rotation
-        self.swapx = swapx
-        self.swapy = swapy
+        self.invertx = invertx
+        self.inverty = inverty
+        self.swapxy = swapxy
         self.cachedpos = [0,0]
         self.__b1 = False
         self.__b2 = False
@@ -59,9 +60,9 @@ class PiTft:
                     raise(Exception("PiTft rotation is unsupported"))
                 d={}
                 t=MOUSEBUTTONUP if r["touch"]==0 else (MOUSEMOTION if self.pitft.button_down else MOUSEBUTTONDOWN)
-                if self.swapx:
+                if self.invertx:
                     e={"x":e["x"]*-1,"y":e["y"]}
-                if self.swapy:
+                if self.inverty:
                     # nocomment
 # Webeditor
 # I hate it
@@ -69,6 +70,8 @@ class PiTft:
 # moof
 # why
                     e={"y":e["y"]*-1,"x":e["x"]}
+                if self.swapxy:
+                    e={"x":e["y"],"y":e["x"]}
                 if t==MOUSEBUTTONDOWN:
                     d["button"]=1
                     d["pos"]=(e["x"],e["y"])
