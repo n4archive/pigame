@@ -1,4 +1,9 @@
 import pygame,pitft_touchscreen
+defaultrot = 90
+try:
+    defaultrot = open("/etc/pigame.conf").read()
+except Exception:
+    defaultrot = 90
 support_gpio = True
 try:
     import RPi.GPIO as GPIO
