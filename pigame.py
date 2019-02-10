@@ -57,16 +57,16 @@ class PiTft:
                 self.cachedpos=(e["x"],e["y"])
                 if self.pitft.pigamerotr==90:
                     e={"x":e["x"],"y":240-e["y"]}
-                    rel=(rel[0],rel[1]*-1)
+                    rel=(rel[0],240-rel[1])
                 elif self.pitft.pigamerotr==270:
                     e={"x":320-e["x"],"y":e["y"]}
-                    rel=(rel[0]*-1,rel[1])
+                    rel=(320-rel[0],rel[1])
                 else:
                     raise(Exception("PiTft rotation is unsupported"))
                 d={}
                 t=MOUSEBUTTONUP if r["touch"]==0 else (MOUSEMOTION if self.pitft.button_down else MOUSEBUTTONDOWN)
                 if self.invertx:
-                    e={"x":e["x"]*-1,"y":e["y"]}
+                    e={"x":320-e["x"],"y":e["y"]}
                 if self.inverty:
                     # nocomment
 # Webeditor
@@ -74,7 +74,7 @@ class PiTft:
 # grr
 # moof
 # why
-                    e={"y":e["y"]*-1,"x":e["x"]}
+                    e={240-"y":e["y"],"x":e["x"]}
                 if self.swapxy:
                     e={"x":e["y"],"y":e["x"]}
                 if t==MOUSEBUTTONDOWN:
