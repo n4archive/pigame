@@ -125,7 +125,8 @@ class PiTft:
             GPIO.add_event_detect(self.__pin4,GPIO.FALLING,callback=callback,bouncetime=bouncetime)
     def Cleanup(self):
         """Cleanup GPIO."""
-        GPIO.cleanup()
+        if self.use_gpio:
+            GPIO.cleanup()
     @property
     def Button1(self):
         """Equals True if Button 1 is pressed."""
