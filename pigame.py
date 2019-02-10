@@ -77,7 +77,7 @@ class PiTft:
 # grr
 # why
                     rel=(rel[0],240-rel[1])
-                    e={240-"y":e["y"],"x":e["x"]}
+                    e={"y":240-e["y"],"x":e["x"]}
                 if self.swapxy:
                     rel=(rel[1],rel[0])
                     e={"x":e["y"],"y":e["x"]}
