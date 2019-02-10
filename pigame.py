@@ -1,7 +1,10 @@
 import pygame,pitft_touchscreen
 defaultrot = 90
 try:
-    defaultrot = int(open("/etc/pigame.conf").read())
+    file = open("/etc/pigame.conf","r")
+    defaultrot = file.read()
+    file.close()
+    defaultrot = int(defaultrot)
 except Exception:
     defaultrot = 90
 support_gpio = True
