@@ -11,10 +11,12 @@ except ImportError:
     support_gpio = False
 from pygame.locals import *
 class PiTft:
-    def __init__(self,rotation:int=90,v2:bool=True,allow_gpio:bool=True,invertx:bool=False,inverty:bool=False,swapxy:bool=False,buttons=[True,True,True,True]):
+    def __init__(self,rotation:int=-1,v2:bool=True,allow_gpio:bool=True,invertx:bool=False,inverty:bool=False,swapxy:bool=False,buttons=[True,True,True,True]):
         self.use_gpio = support_gpio and allow_gpio
         if not self.use_gpio:
             buttons=[False,False,False,False]
+        if rotation == -1:
+            rotation = defaultrot
         self.pitft=pitft_touchscreen.pitft_touchscreen()
         self.pitft.button_down=False
         self.pitft.pigameapi=2
@@ -67,15 +69,17 @@ class PiTft:
                 t=MOUSEBUTTONUP if r["touch"]==0 else (MOUSEMOTION if self.pitft.button_down else MOUSEBUTTONDOWN)
                 if self.invertx:
                     e={"x":320-e["x"],"y":e["y"]}
+                    rel=(320-rel[0],rel[1])
                 if self.inverty:
                     # nocomment
 # Webeditor
 # I hate it
 # grr
-# moof
 # why
+                    rel=(rel[0],240-rel[1])
                     e={240-"y":e["y"],"x":e["x"]}
                 if self.swapxy:
+                    rel=(rel[1],rel[0])
                     e={"x":e["y"],"y":e["x"]}
                 if t==MOUSEBUTTONDOWN:
                     d["button"]=1
