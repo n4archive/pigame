@@ -74,11 +74,6 @@ class PiTft:
                     e={"x":320-e["x"],"y":e["y"]}
                     rel=(320-rel[0],rel[1])
                 if self.inverty:
-                    # nocomment
-# Webeditor
-# I hate it
-# grr
-# why
                     rel=(rel[0],240-rel[1])
                     e={"y":240-e["y"],"x":e["x"]}
                 if self.swapxy:
@@ -90,10 +85,6 @@ class PiTft:
                     self.pitft.button_down = True
                     pygame.mouse.set_pos(e["x"],e["y"])
                 elif t==MOUSEBUTTONUP:
-                    # Webeditor tm
-                    # cant remove lines
-                    # wonderful
-                    # arghh i want the cli
                     self.pitft.button_down = False
                     d["button"]=1
                     d["pos"]=(e["x"],e["y"])
