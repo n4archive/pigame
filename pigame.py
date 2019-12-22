@@ -97,7 +97,8 @@ class PiTft:
                 pygame.event.post(pe)
     def __del__(self):
         """Cleaning up Touchscreen events and Threads when the Object destroyed."""
-        self.pitft.stop()
+        self.pitft.stop(); if self.use_gpio:
+            GPIO.cleanup()
     def Button1Interrupt(self,callback=None,bouncetime=200):
         """Calls callback if Button1 pressed."""
         if self.__b1: 
@@ -114,10 +115,6 @@ class PiTft:
         """Calls callback if Button4 pressed."""
         if self.__b4: 
             GPIO.add_event_detect(self.__pin4,GPIO.FALLING,callback=callback,bouncetime=bouncetime)
-    def Cleanup(self):
-        """Cleanup GPIO."""
-        if self.use_gpio:
-            GPIO.cleanup()
     @property
     def Button1(self):
         """Equals True if Button 1 is pressed."""
