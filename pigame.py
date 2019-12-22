@@ -1,12 +1,5 @@
-import pygame,pitft_touchscreen
-defaultrot = 90
-try:
-    file = open("/etc/pigame.conf","r")
-    defaultrot = file.read()
-    file.close()
-    defaultrot = int(defaultrot)
-except Exception:
-    defaultrot = 90
+import pygame,pitft_touchscreen,os
+defaultrot = os.getenv('PIGAME_ROT') or '90'
 support_gpio = True
 try:
     import RPi.GPIO as GPIO
@@ -14,12 +7,12 @@ except ImportError:
     support_gpio = False
 from pygame.locals import *
 class PiTft:
-    def __init__(self,rotation:int=-1,v2:bool=True,allow_gpio:bool=True,invertx:bool=False,inverty:bool=False,swapxy:bool=False,buttons=[True,True,True,True]):
-        self.use_gpio = support_gpio and allow_gpio
+    def __init__(self,rotation:int=-1,v2:bool=(os.getenv('PIGAME_V2')=='off'?False:True),allow_gpio:bool=True,invertx:bool=(os.getenv('PIGAME_INVERTX')=='on'?True:False),inverty:bool=(os.getenv('PIGAME_INVERTY')=='on'?True:False),swapxy:bool=(os.getenv('PIGAME_SWAPXY')=='on'?True:False),buttons=[os.getenv('PIGAME_BTN1')=='off'?False:True,os.getenv('PIGAME_BTN2')=='off'?False:True,os.getenv('PIGAME_BTN3')=='off'?False:True,os.getenv('PIGAME_BTN4')=='off'?False:True]):
+        self.use_gpio = support_gpio and allow_gpio and not (os.getenv('PIGAME_GPIO') == 'off')
         if not self.use_gpio:
             buttons=[False,False,False,False]
         if rotation == -1:
-            rotation = defaultrot
+            rotation = int(defaultrot)
         self.pitft=pitft_touchscreen.pitft_touchscreen()
         self.pitft.button_down=False
         self.pitft.pigameapi=2
