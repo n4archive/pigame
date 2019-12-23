@@ -7,7 +7,7 @@ except ImportError:
     support_gpio = False
 from pygame.locals import *
 class PiTft:
-    def __init__(self,rotation:int=-1,v2:bool=(os.getenv('PIGAME_V2')=='off'?False:True),allow_gpio:bool=True,invertx:bool=(os.getenv('PIGAME_INVERTX')=='on'?True:False),inverty:bool=(os.getenv('PIGAME_INVERTY')=='on'?True:False),swapxy:bool=(os.getenv('PIGAME_SWAPXY')=='on'?True:False),buttons=[os.getenv('PIGAME_BTN1')=='off'?False:True,os.getenv('PIGAME_BTN2')=='off'?False:True,os.getenv('PIGAME_BTN3')=='off'?False:True,os.getenv('PIGAME_BTN4')=='off'?False:True]):
+    def __init__(self,rotation:int=-1,v2:bool=False if os.environ['PIGAME_V2']=='off' else True,allow_gpio:bool=True,invertx:bool=True if os.environ['PIGAME_INVERTX']=='on' else False,inverty:bool=True if os.environ['PIGAME_INVERTY']=='on' else False,swapxy:bool=True if os.environ['PIGAME_SWAPXY']=='on' else False,buttons=[False if os.environ['PIGAME_BTN1']=='off' else True,False if os.environ['PIGAME_BTN2']=='off' else True,False if os.environ['PIGAME_BTN3']=='off' else True,False if os.environ['PIGAME_BTN4']=='off' else True]):
         self.use_gpio = support_gpio and allow_gpio and not (os.getenv('PIGAME_GPIO') == 'off')
         if not self.use_gpio:
             buttons=[False,False,False,False]
@@ -90,7 +90,8 @@ class PiTft:
                 pygame.event.post(pe)
     def __del__(self):
         """Cleaning up Touchscreen events and Threads when the Object destroyed."""
-        self.pitft.stop(); if self.use_gpio:
+        self.pitft.stop()
+        if self.use_gpio:
             GPIO.cleanup()
     def Button1Interrupt(self,callback=None,bouncetime=200):
         """Calls callback if Button1 pressed."""
