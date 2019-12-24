@@ -1,13 +1,17 @@
 import pygame,pitft_touchscreen,os
 defaultrot = os.getenv('PIGAME_ROT') or '90'
 support_gpio = True
+envmk = ['PIGAME_V2','PIGAME_INVERTX','PIGAME_INVERTY','PIGAME_SWAPXY','PIGAME_BTN1','PIGAME_BTN2','PIGAME_BTN3','PIGANE_BTN4']
+env = {}
+for i in envmk:
+    env[i] = os.getenv(i)
 try:
     import RPi.GPIO as GPIO
 except ImportError:
     support_gpio = False
 from pygame.locals import *
 class PiTft:
-    def __init__(self,rotation:int=-1,v2:bool=False if os.environ['PIGAME_V2']=='off' else True,allow_gpio:bool=True,invertx:bool=True if os.environ['PIGAME_INVERTX']=='on' else False,inverty:bool=True if os.environ['PIGAME_INVERTY']=='on' else False,swapxy:bool=True if os.environ['PIGAME_SWAPXY']=='on' else False,buttons=[False if os.environ['PIGAME_BTN1']=='off' else True,False if os.environ['PIGAME_BTN2']=='off' else True,False if os.environ['PIGAME_BTN3']=='off' else True,False if os.environ['PIGAME_BTN4']=='off' else True]):
+    def __init__(self,rotation:int=-1,v2:bool=False if env['PIGAME_V2']=='off' else True,allow_gpio:bool=True,invertx:bool=True if env['PIGAME_INVERTX']=='on' else False,inverty:bool=True if env['PIGAME_INVERTY']=='on' else False,swapxy:bool=True if env['PIGAME_SWAPXY']=='on' else False,buttons=[False if env['PIGAME_BTN1']=='off' else True,False if env['PIGAME_BTN2']=='off' else True,False if env['PIGAME_BTN3']=='off' else True,False if env['PIGAME_BTN4']=='off' else True]):
         self.use_gpio = support_gpio and allow_gpio and not (os.getenv('PIGAME_GPIO') == 'off')
         if not self.use_gpio:
             buttons=[False,False,False,False]
