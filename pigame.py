@@ -1,7 +1,7 @@
 import pygame,pitft_touchscreen,os
 defaultrot = os.getenv('PIGAME_ROT') or '90'
 support_gpio = True
-envmk = ['PIGAME_V2','PIGAME_INVERTX','PIGAME_INVERTY','PIGAME_SWAPXY','PIGAME_BTN1','PIGAME_BTN2','PIGAME_BTN3','PIGANE_BTN4']
+envmk = ['PIGAME_V2','PIGAME_INVERTX','PIGAME_INVERTY','PIGAME_SWAPXY','PIGAME_BTN1','PIGAME_BTN2','PIGAME_BTN3','PIGAME_BTN4']
 env = {}
 for i in envmk:
     env[i] = os.getenv(i)
